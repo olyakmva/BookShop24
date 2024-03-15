@@ -1,0 +1,79 @@
+﻿@using System.Web;
+@model IEnumerable<BookShop24.Models.Book>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Список книг</h1>
+
+<p>
+    <a asp-action="Create">Добавить новую книгу</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSort"]">
+                @Html.DisplayNameFor(model => model.Author)
+                </a>
+            </th>
+            <th>
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]">
+                @Html.DisplayNameFor(model => model.Name)
+                </a>
+            </th>
+            <th>
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSort"]">
+                @Html.DisplayNameFor(model => model.Price)
+                </a>
+            </th>
+            <th>
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSort"]">
+                @Html.DisplayNameFor(model => model.Year)
+                </a>
+            </th>
+            <th>
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySort"]">
+                @Html.DisplayNameFor(model => model.Category)
+                </a>
+            </th>
+           
+            <th>
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NumberSort"]">
+                @Html.DisplayNameFor(model => model.Number)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">@HttpUtility.HtmlDecode("&#10000;")</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">@HttpUtility.HtmlDecode("&#128270;")</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">@HttpUtility.HtmlDecode("&#10060;")</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
