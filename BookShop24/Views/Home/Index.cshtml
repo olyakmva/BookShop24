@@ -1,8 +1,23 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<BookShop24.Models.Book>
+<div class="container">
+    <div class="row justify-content-around row-cols-4">
+        @foreach( Book book in Model)
+        {
+            <div class="card" style="width: 14rem;">
+                <img src="@Url.Content("~/images/")@book.ImageUrl" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">@book.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">@book.Author</h6>
+                    <p class="card-text fs-3 fw-semibold">@book.Price руб. </p>                                 
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Add" asp-controller="Cart" asp-route-id="@book.Id"
+                       class="btn btn-info">В корзину</a>
+                </div>
+                <br />
+            </div>
+        }
+        <br />
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>

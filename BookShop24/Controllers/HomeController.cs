@@ -1,5 +1,6 @@
 ﻿using BookShop24.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace BookShop24.Controllers
@@ -7,15 +8,17 @@ namespace BookShop24.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        BookContext db;
+        public HomeController(ILogger<HomeController> logger, BookContext context)
         {
             _logger = logger;
+            db= context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var books = db.Books.Include(b=> b.Category).ToList();
+            return View(books);
         }
 
         public IActionResult Privacy()

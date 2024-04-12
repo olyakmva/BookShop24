@@ -2,15 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace BookShop24.Controllers
 {
     public class BookController : Controller
     {
         BookContext _db;
-        public BookController(BookContext context)
+        IWebHostEnvironment _environment;
+        const int ImageWidth = 150;
+        const int ImageHeight = 200; 
+        public BookController(BookContext context, IWebHostEnvironment hostEnvironment)
         {
             _db = context;
+            _environment = hostEnvironment;
             //var zanr1 = new Category() { Name = "Учебники" };
             //var zanr2 = new Category() { Name = "Фэнтези" };
             //var book1 = new Book
@@ -112,7 +118,20 @@ namespace BookShop24.Controllers
         public IActionResult Create(Book book, IFormFile upload)
         {
             if (upload != null)
-            { }
+            { 
+                string fileName =Path.GetFileName(upload.FileName);
+                var extFile = fileName.Substring(fileName.LastIndexOf('.'));
+                if(extFile.Contains("png")|| extFile.Contains("bmp")|| extFile.Contains("jpg")
+                    || extFile.Contains("jpeg"))
+                {
+                    var image = Image.Load(upload.OpenReadStream());
+                    image.Mutate(x=> x.Resize(ImageWidth, ImageHeight));
+                    string path = "\\wwwroot\\images\\" + fileName;
+                    var hostPath = _environment.ContentRootPath + path;
+                    image.Save(hostPath);
+                    book.ImageUrl = fileName;
+                }         
+            }
             _db.Books.Add(book);
             _db.SaveChanges();
             return RedirectToAction("Index");
@@ -140,7 +159,21 @@ namespace BookShop24.Controllers
         public IActionResult Edit(Book book, IFormFile upload)
         {
             if (upload != null)
-            { }
+            {
+                string fileName = Path.GetFileName(upload.FileName);
+                var extFile = fileName.Substring(fileName.LastIndexOf('.'));
+                if (extFile.Contains("png") || extFile.Contains("bmp") || extFile.Contains("jpg")
+                    || extFile.Contains("jpeg"))
+                {
+                    var image = Image.Load(upload.OpenReadStream());
+                    image.Mutate(x => x.Resize(ImageWidth, ImageHeight));
+                    string path = "\\wwwroot\\images\\" + fileName;
+                    var hostPath = _environment.ContentRootPath + path;
+                    image.Save(hostPath);
+                    book.ImageUrl = fileName;
+                }
+            }
+
             _db.Entry(book).State = EntityState.Modified;
             _db.SaveChanges();
             return RedirectToAction("Index");
