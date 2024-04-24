@@ -1,5 +1,6 @@
 ﻿using BookShop24.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop24.Controllers
 {
@@ -83,5 +84,34 @@ namespace BookShop24.Controllers
             }
             return RedirectToAction("Index");
         }
+        public class ChangeItemQuantityDto
+        {
+            public int id { get; set; }
+            public int newQuantity { get; set; }
+        }
+        public class CartChangingResult
+        {
+            public int delta { get; set; }
+            public int cartCount { get; set; }
+            public int bookId { get; set; }
+        }
+        [HttpPost]
+        public IActionResult ChangeItemQuantity([FromBody] ChangeItemQuantityDto dto)
+        {
+
+            var cartItem = db.ShoppingCarts.Find(dto.id);
+            int quantity = dto.newQuantity;
+            var book = db.Books.Find(cartItem.BookId);
+            var delta = (quantity - cartItem.Quantity) * book.Price;
+            cartItem.Quantity = quantity;
+            db.Entry(cartItem).State = EntityState.Modified;
+            db.SaveChanges();
+            int count = db.ShoppingCarts
+                    .Where(c => c.CartId == cartItem.CartId)
+                    .Sum(c => c.Quantity);
+
+            return Json(new CartChangingResult() { delta = delta, cartCount = count, bookId = book.Id });
+        }
+
     }
 }

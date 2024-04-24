@@ -1,0 +1,64 @@
+﻿@model BookShop24.Models.Order
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Ваш заказ:</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input type="hidden"  asp-for="Id"/>
+            <input type="hidden" asp-for="Date" />
+            <input type="hidden" asp-for="Status" />
+            <input type="hidden" asp-for="TotalPrice" />
+            <input type="hidden" asp-for="DeliveryMethod" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <h4> Общая стоимость: @Model.TotalPrice руб.</h4>
+            </div>
+            <br/>
+            <p>для </p>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                @Html.DropDownList(Model.DeliveryMethod, ViewBag.DeliveryMethod as SelectList) 
+                
+            </div>*@
+            <p> курьером по адресу: </p>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+                <input type="submit" value="Подтвердить" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<br />
+
+<div class="container justify-content-around ">
+    <a asp-action="Index" asp-controller="Cart" class="btn btn-secondary" >Назад в корзину</a> 
+    <a asp-action="Delete" asp-controller="Order" asp-route-id="@Model.Id" class="btn btn-warning">Отменить заказ</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

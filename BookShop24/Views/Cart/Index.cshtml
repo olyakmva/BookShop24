@@ -26,13 +26,18 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Quantity)
                     </th>
-                    <th></th>
+                    <th>
+                      <p> Стоимость</p>
+                    </th>
+                    <th>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    var rowId = "itemRow" + item.SelectBook.Id;
+                    <tr id=@rowId>
                         <td>
                             @Html.DisplayFor(modelItem => item.SelectBook.Author)
                         </td>
@@ -43,21 +48,62 @@
                             @Html.DisplayFor(modelItem => item.SelectBook.Price)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Quantity)
+                            <input type="number" min="1" max="@item.SelectBook.Number" id="quantity" oninput="validity.valid || (value = '1');"
+                                   value="@item.Quantity" onchange="onItemQuantityChanged(event, @item.Id)" onblur="Check(event,@item.Id)" />
                         </td>
-
+                        <td class="itemCost">
+                            @(item.Quantity * item.SelectBook.Price)
+                        </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">@HttpUtility.HtmlDecode("&#10060;")</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                            </svg>
+                            </a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
+        <br/>
+        <p> Общая стоимость:<span id="totalCost"> @ViewBag.Sum </span> руб.</p>
+        <a asp-action="Create" asp-controller="Order" class="btn btn-info"> Оформить заказ </a> 
 
         
     }
 }
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function onItemQuantityChanged(e, cartId) {
+        let text = e.target.value;
+        if (!isNaN(parseInt(text, 10))) {
+            axios.post(
+                "/Cart/ChangeItemQuantity",
+                {
+                    id: cartId,
+                    newQuantity: parseInt(e.target.value, 10)
+                }
+            ).then((response) => {
+                var totalCost = parseInt($("#totalCost").text(), 10);
+                totalCost += response.data.delta;
+                $("#totalCost").text(totalCost.toString());
+                /*$("#cartCount").text(response.data.cartCount);*/
+                var row = $("#itemRow" + response.data.bookId);
+                var itemCostCell = row.find(".itemCost");
+                var itemCost = parseInt(itemCostCell.text(), 10);
+                itemCost += response.data.delta;
+                itemCostCell.text(itemCost.toString());
+            });
+        }
+    }
+    function Check(e, cartId) {
+        let text = e.target.value;
+        if (isNaN(parseInt(text, 10)) || parseInt(text, 10) < 1) {
+            e.target.value = '1';
+            onItemQuantityChanged(e, cartId);
+        }
+    }
+</script>
 
 
