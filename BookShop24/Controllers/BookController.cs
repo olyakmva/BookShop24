@@ -17,66 +17,66 @@ namespace BookShop24.Controllers
         {
             _db = context;
             _environment = hostEnvironment;
-            //var zanr1 = new Category() { Name = "Учебники" };
-            //var zanr2 = new Category() { Name = "Фэнтези" };
-            //var book1 = new Book
-            //{
-            //    Author = "Троелсен Э.",
-            //    Name = "Язык программирования C#",
-            //    Number = 12,
-            //    Year = 2020,
-            //    Price = 4230,
-            //    Category = zanr1
-            //};
-            //var book2 = new Book
-            //{
-            //    Author = "Скиена С.",
-            //    Name = "Наука о данных",
-            //    Number = 22,
-            //    Year = 2021,
-            //    Price = 1230,
-            //    Category = zanr1
-            //};
-            //var book3 = new Book
-            //{
-            //    Author = "Демидович Б.Н.",
-            //    Name = "Сборник задач и упражнений по математическому анализу",
-            //    Number = 55,
-            //    Year = 2020,
-            //    Price = 975,
-            //    Category = zanr1
-            //};
-            //var book4 = new Book
-            //{
-            //    Author = "Фрай Макс",
-            //    Name = "Чужак",
-            //    Number = 27,
-            //    Year = 2019,
-            //    Price = 450,
-            //    Category = zanr2
-            //};
-            //var book5 = new Book
-            //{
-            //    Author = "Громыко О.",
-            //    Name = "Верные враги",
-            //    Number = 12,
-            //    Year = 2020,
-            //    Price = 520,
-            //    Category = zanr2
-            //};
-            //var book6 = new Book
-            //{
-            //    Author = "Лукьяненко С.",
-            //    Name = "Спектр",
-            //    Number = 33,
-            //    Year = 2018,
-            //    Price = 330,
-            //    Category = zanr2
-            //};
-            ////_db.Categories.Add(zanr1);
-            ////_db.Categories.Add(zanr2);
-            //_db.Books.AddRange(new[] { book1, book2,book4,book5,book6, book3 });
-            //_db.SaveChanges();
+            var zanr1 = new Category() { Name = "Учебники" };
+            var zanr2 = new Category() { Name = "Фэнтези" };
+            var book1 = new Book
+            {
+                Author = "Троелсен Э.",
+                Name = "Язык программирования C#",
+                Number = 12,
+                Year = 2020,
+                Price = 4230,
+                Category = zanr1
+            };
+            var book2 = new Book
+            {
+                Author = "Скиена С.",
+                Name = "Наука о данных",
+                Number = 22,
+                Year = 2021,
+                Price = 1230,
+                Category = zanr1
+            };
+            var book3 = new Book
+            {
+                Author = "Демидович Б.Н.",
+                Name = "Сборник задач и упражнений по математическому анализу",
+                Number = 55,
+                Year = 2020,
+                Price = 975,
+                Category = zanr1
+            };
+            var book4 = new Book
+            {
+                Author = "Фрай Макс",
+                Name = "Чужак",
+                Number = 27,
+                Year = 2019,
+                Price = 450,
+                Category = zanr2
+            };
+            var book5 = new Book
+            {
+                Author = "Громыко О.",
+                Name = "Верные враги",
+                Number = 12,
+                Year = 2020,
+                Price = 520,
+                Category = zanr2
+            };
+            var book6 = new Book
+            {
+                Author = "Лукьяненко С.",
+                Name = "Спектр",
+                Number = 33,
+                Year = 2018,
+                Price = 330,
+                Category = zanr2
+            };
+            _db.Categories.Add(zanr1);
+            _db.Categories.Add(zanr2);
+            _db.Books.AddRange(new[] { book1, book2, book4, book5, book6, book3 });
+            _db.SaveChanges();
 
         }
         public IActionResult Index(SortOrder sortOrder = SortOrder.AuthorAsc)

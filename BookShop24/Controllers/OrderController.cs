@@ -57,7 +57,10 @@ namespace BookShop24.Controllers
             order.TotalPrice = sum;
             db.Orders.Add(order);
             db.Items.AddRange(orderItems);
-            db.SaveChanges(); 
+            db.SaveChanges();
+            ViewBag.PickUpPoints = new SelectList( GetPickUpPoints(),"Id","Address");
+            ViewBag.DeliveryMethod = new SelectList(GetDeliveries(), "Name", "Name");
+
             return View(order);
         }
 
@@ -76,6 +79,10 @@ namespace BookShop24.Controllers
         [HttpPost]
         public IActionResult Create(Order order)
         {
+            if(order.PickUpPointId > 0)
+            {
+                order.Address= GetPickUpPoints()[order.PickUpPointId].Address;
+            }
             order.Status = "подтвержден";
             db.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             db.SaveChanges();
@@ -115,5 +122,37 @@ namespace BookShop24.Controllers
             db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
+        List<PickUpPoint> GetPickUpPoints()
+        {
+            return new List<PickUpPoint>() {
+                new PickUpPoint() { Id = 0, Address ="Выберите пункт самовывоза"},
+                new PickUpPoint() { Id = 1, Address ="Озон, Ленинградский пр-т, 52"},
+                new PickUpPoint() { Id = 2, Address ="Яндекс, ул. Клубная, 18"},
+                new PickUpPoint() { Id = 3, Address ="Озон, пр-т Ленина, 24"}
+            };
+        }
+        List<Delivery> GetDeliveries()
+        {
+            return new List<Delivery>() {
+                new Delivery() { Id = 0, Name ="Выберите способ доставки"},
+                new Delivery() { Id = 1, Name ="самовывоз"},
+                new Delivery() { Id = 2, Name ="курьер"}
+            };
+        }
+
     }
+    internal class PickUpPoint
+    {
+        public int Id { get; set; }
+        public string Address { get; set; }
+    }
+    internal class Delivery
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }    
+
+    }
+
+
+
 }

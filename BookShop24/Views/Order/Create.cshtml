@@ -14,7 +14,7 @@
             <input type="hidden" asp-for="Date" />
             <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="TotalPrice" />
-            <input type="hidden" asp-for="DeliveryMethod" />
+          
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="form-group">
@@ -32,19 +32,29 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                @Html.DropDownList(Model.DeliveryMethod, ViewBag.DeliveryMethod as SelectList) 
-                
-            </div>*@
-            <p> курьером по адресу: </p>
+            <br/>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+                @Html.DropDownListFor(m=>m.DeliveryMethod, ViewBag.DeliveryMethod as SelectList, new { id ="mySelect"})             
             </div>
-
-            <br />
-
+            <br/>
+            <div id="conditionalFields">
+                <div id="optionalField2" style="display:none">
+                    <p> доставит по адресу: </p>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div id="optionalField1" style="display:none">
+                    <p> откуда:</p>
+                    <br />
+                     @Html.DropDownListFor(m=>m.PickUpPointId, ViewBag.PickUpPoints as SelectList)
+                </div>
+                
+                <br />
+            </div>
             <div class="form-group">
                 <input type="submit" value="Подтвердить" class="btn btn-success" />
             </div>
@@ -61,4 +71,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var selectElement = document.getElementById('mySelect');
+        var option1div = document.getElementById('optionalField1');
+        var option2div = document.getElementById('optionalField2');
+        selectElement.addEventListener('change', function()
+        {
+            var selectOption = selectElement.value;
+            if(selectOption=='самовывоз'){
+                option1div.style.display='block';
+                option2div.style.display = 'none';
+            }
+            else if (selectOption == 'курьер') {
+                option2div.style.display = 'block';
+                option1div.style.display = 'none';
+            }
+            else {
+                    option1div.style.display = 'none';
+                    option2div.style.display = 'none';  
+            }
+        });
+    </script>
 }

@@ -32,7 +32,9 @@ namespace BookShop24.Models
 
         [Display(Name = "Способ доставки")]
         public string DeliveryMethod { get; set; }
-
+        [Display(Name = "Номер пункта самовывоза")]
+        [Range(0, 10000)]
+        public int PickUpPointId { get; set; }
         public string Status { get; set; }
     }
 }
