@@ -75,6 +75,8 @@ namespace BookShop24.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
+            if (string.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.Action("Index","Home");
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
@@ -120,6 +122,50 @@ namespace BookShop24.Controllers
             // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            if(user==null )
+            {
+                return NotFound();
+            }
+            ChangePasswordViewModel model = new ChangePasswordViewModel()
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if(ModelState.IsValid) 
+            {
+                var user = await _userManager.FindByIdAsync(model.Id);
+                if(user==null)
+                {
+                    ModelState.AddModelError(string.Empty, "Пользователь не найден");
+                }
+                else
+                {
+                    IdentityResult result =
+                        await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    if(result.Succeeded) 
+                    {
+                        ViewBag.Msg = "Ваш пароль успешно изменен";
+                        return View("Success");
+                    }
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return View(model);
         }
     }
 }

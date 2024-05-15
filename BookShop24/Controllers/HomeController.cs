@@ -18,7 +18,31 @@ namespace BookShop24.Controllers
         public IActionResult Index()
         {
             var books = db.Books.Include(b=> b.Category).ToList();
+            ViewBag.Msg = "Наши книги";
             return View(books);
+        }
+        public IActionResult Search(string searchStr)
+        {
+            var books = db.Books.Include(b => b.Category).ToList();
+            if (string.IsNullOrEmpty(searchStr))
+            {
+                ViewBag.Msg = "Напишите в строке поиска название или автора книги, что Вы ищете";
+                return View("Index",books);
+            }
+            
+                ///TODO обработать строку поиска
+              
+                var list = books.FindAll(b =>
+                        b.Name.Contains(searchStr) || b.Author.Contains(searchStr) ||
+                        b.Year.ToString().Contains(searchStr) || b.Category.Name.Contains(searchStr));
+                if (list.Count == 0)
+                {
+                    ViewBag.Msg = "К сожалению, мы ничего не нашли по Вашему запросу";
+                    return View("Index",books);
+                }
+                else ViewBag.Msg = "Вот, что мы нашли по Вашему запросу:";
+                return View("Index", list);
+
         }
 
         public IActionResult Privacy()

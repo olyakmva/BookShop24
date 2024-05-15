@@ -28,9 +28,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Корзина</a>
                         </li>
-                       
                     </ul>
-                    <partial name="_LoginPartial" />
+                    <form class="d-flex" asp-action="Search" asp-controller="Home">
+                        <input class="form-control me-2" type="search" name="searchStr" placeholder="Я ищу" aria-label="Поиск">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>
+                    <partial name="_LoginPartial"/>
+
                 </div>
             </div>
         </nav>
