@@ -1,23 +1,26 @@
 ﻿using BookShop24.Models;
-using BookShop24.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace BookShop24.Controllers
 {
     public class OrderController : Controller
     {
         BookContext db;
-        public OrderController(BookContext context) 
+        private UserManager<IdentityUser> _userManager;
+        public OrderController(BookContext context, UserManager<IdentityUser> userManager) 
         { 
             db = context;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
             return View();
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             string cartId = GetCookie();
             if (cartId == null)
@@ -34,6 +37,22 @@ namespace BookShop24.Controllers
                 Address = string.Empty,
                 DeliveryMethod = "курьером"
             };
+            if(User.Identity.IsAuthenticated)
+            {
+                var name = User.Identity.Name;
+                var user = await _userManager.FindByNameAsync(name);
+                var client = db.Clients.Find(user.Id);
+                if (client != null)
+                {
+                    if(!string.IsNullOrEmpty(client.LastName))
+                        order.LastName = client.LastName;
+                    if(!string.IsNullOrEmpty(client.Name)) 
+                        order.Name = client.Name;
+                    if(!string.IsNullOrEmpty(client.Address))    
+                        order.Address = client.Address;
+                    order.ClientId = client.Id;
+                }
+            }
             var orderItems = new List<OrderItem>();
             List<CartItem> cartList = db.ShoppingCarts.Where(c => c.CartId == cartId).ToList();
             int sum = 0;
@@ -60,7 +79,6 @@ namespace BookShop24.Controllers
             db.SaveChanges();
             ViewBag.PickUpPoints = new SelectList( GetPickUpPoints(),"Id","Address");
             ViewBag.DeliveryMethod = new SelectList(GetDeliveries(), "Name", "Name");
-
             return View(order);
         }
 
@@ -77,8 +95,39 @@ namespace BookShop24.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Order order)
+        public async Task<IActionResult> CreateAsync(Order order)
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                var name = User.Identity.Name;
+                var user = await _userManager.FindByNameAsync(name);
+                var client = db.Clients.Find(user.Id);
+                bool IsNew = false;
+                if(client == null)
+                {
+                    IsNew = true;
+                    client = new Client()
+                    {
+                        Id = user.Id,
+                        OrdersNumber = 0,
+                        CurrentDiscount = 0,
+                        TotalOrdersCost = 0,
+                        ReviewsNumber = 0
+                    };
+                    order.ClientId = client.Id;
+                    db.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                }
+                client .Address = order.Address;
+                client.LastName = order.LastName;
+                client.Name = order.Name;
+                client.OrdersNumber++;
+                client.TotalOrdersCost += order.TotalPrice;
+                if (IsNew)
+                {
+                    db.Clients.Add(client);
+                }
+                else db.Entry(client).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
             if(order.PickUpPointId > 0)
             {
                 order.Address= GetPickUpPoints()[order.PickUpPointId].Address;

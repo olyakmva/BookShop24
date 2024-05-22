@@ -8,7 +8,10 @@ namespace BookShop24.Models
     {
         [HiddenInput(DisplayValue = false)]// ID покупки
         public int Id { get; set; }
-        
+
+        [HiddenInput(DisplayValue = false)]
+        public string? ClientId { get; set; } // ID покупателя
+
         [Required]
         [Range(1, 50000, ErrorMessage = "Недопустимая сумма")]
         [Display(Name = "Общая стоимость")]

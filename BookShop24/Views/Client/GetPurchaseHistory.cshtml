@@ -1,0 +1,26 @@
+﻿@model IEnumerable<BookShop24.Models.Book>
+
+<br />
+<h2>Книги, которые Вы покупали: </h2>
+<br />
+<div class="container">
+    <div class="row justify-content-around row-cols-4">
+        @foreach (Book book in Model)
+        {
+            <div class="card" style="width: 14rem;">
+                <img src="@Url.Content("~/images/")@book.ImageUrl" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">@book.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">@book.Author</h6>
+                    <p>@book.Year</p>
+                    <p class="card-text fs-3 fw-semibold">@book.Price руб. </p>
+                </div>
+               
+            </div>
+            <br />
+            <br />
+        }
+        <br />
+    </div>
+
+</div>

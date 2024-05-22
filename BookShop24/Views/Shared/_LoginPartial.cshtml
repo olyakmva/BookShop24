@@ -14,7 +14,11 @@
                         asp-controller="Account" 
                         asp-route-name="@UserManager.GetUserName(User)">Сменить пароль</a>
                     </li>
-                    <li><a class="dropdown-item" href="#">История заказов</a></li>
+                    <li>
+                        <a class="dropdown-item" asp-action="GetPurchaseHistory"
+                        asp-controller="Client"
+                        asp-route-name="@UserManager.GetUserName(User)">История заказов</a>
+                    </li>
                     <li>
                         <form asp-controller="Account" asp-action="Logout" class="dropdown-item">
                             <button type="submit" class="btn navbar-btn "> Выход</button>

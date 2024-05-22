@@ -13,6 +13,7 @@
             <input type="hidden"  asp-for="Id"/>
             <input type="hidden" asp-for="Date" />
             <input type="hidden" asp-for="Status" />
+            <input type="hidden" asp-for="ClientId" />
             <input type="hidden" asp-for="TotalPrice" />
           
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -55,8 +56,8 @@
                 
                 <br />
             </div>
-            <div class="form-group">
-                <input type="submit" value="Подтвердить" class="btn btn-success" />
+            <div class="form-group" id="btnSubmitDiv" style="display:none">
+                <input type="submit" value="Подтвердить"   class="btn btn-success" />
             </div>
         </form>
     </div>
@@ -75,20 +76,24 @@
         var selectElement = document.getElementById('mySelect');
         var option1div = document.getElementById('optionalField1');
         var option2div = document.getElementById('optionalField2');
+        var btnSubmit = document.getElementById('btnSubmitDiv');
         selectElement.addEventListener('change', function()
         {
             var selectOption = selectElement.value;
             if(selectOption=='самовывоз'){
                 option1div.style.display='block';
                 option2div.style.display = 'none';
+                btnSubmit.style.display='block'
             }
             else if (selectOption == 'курьер') {
                 option2div.style.display = 'block';
                 option1div.style.display = 'none';
+                btnSubmit.style.display = 'block';
             }
             else {
                     option1div.style.display = 'none';
-                    option2div.style.display = 'none';  
+                    option2div.style.display = 'none';
+                    btnSubmit.style.display = 'none';
             }
         });
     </script>
