@@ -64,7 +64,7 @@ namespace BookShop24.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
-                //await _userManager.AddToRoleAsync(user, "user");
+                await _userManager.AddToRoleAsync(user, "user");
                 // установка куки
                 await _signInManager.SignInAsync(user, false);
                 return RedirectToAction("Index", "Home");

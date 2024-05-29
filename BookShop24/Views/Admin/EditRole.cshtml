@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IdentityRole
+
+<h2> Изменение имени для роли @Model.Name </h2>
+<form asp-action="EditRole" asp-controller="Admin" method="post">
+    <input type="hidden" name="id" value="@Model.Id"/>
+    <label> Новое имя роли: </label>
+    <input type="text" name="name" />
+    <input type="submit" value="OK" class="btn btn-secondary" />
+</form>

@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IdentityUser
+
+<h2> Вы уверены, что хотите удалить этого пользователя ?</h2>
+
+<form asp-action="RemoveUser"  asp-controller="Admin" method="post" >
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group">
+       <p> @Model.Email </p>
+       <p> @Model.EmailConfirmed </p>
+    </div>
+    
+    <div class="form-group">
+        <input type="submit" class="btn btn-warning" value="Удалить" />
+    </div>
+</form>
+<br/>
+<a asp-action="Index" asp-controller="Admin" class="btn btn-secondary">Назад к списку пользователей</a>

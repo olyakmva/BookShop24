@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Web;
+@model IEnumerable<IdentityRole>
+
+<h2> Список существующих ролей </h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Роль
+        </th>
+        <th>
+           Изменение
+        </th>
+        <th>
+            Удаление
+        </th>
+    </tr>
+    @foreach (var role in Model)
+    {
+        <tr>
+            <td> @role.Name</td>
+          
+            <td>
+                <a asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-outline-primary">
+                    @HttpUtility.HtmlDecode("&#10000;")
+                </a>
+            </td>
+            <td>
+                <a asp-action="DeleteRole" asp-route-id="@role.Id" class="btn btn-outline-primary">
+                    @HttpUtility.HtmlDecode("&#10060;")
+                </a>
+            </td>
+
+        </tr>
+    }
+</table>
+<br/>
+<a asp-action="AddRole" asp-controller="Admin" class="btn btn-outline-primary"> Добавить роль на сайт</a>

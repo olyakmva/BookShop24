@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model BookShop24.ViewModels.ChangeRoleViewModel;
+
+<h2> Роли для пользователя @Model.UserEmail </h2>
+
+<form asp-action="EditUserRole" method="post" asp-controller="Admin">
+    <input type="hidden" name="id" value="@Model.UserId"/>
+    <div class="form-group">
+        @foreach(var role in Model.AllRoles)
+        {
+            if(Model.UserRoles.Contains(role.Name))
+            {
+                <input type="checkbox" name="roles" value="@role.Name" checked/> @role.Name
+            }
+            else
+            {
+                <input type="checkbox" name="roles" value="@role.Name" /> @role.Name
+            }
+            <br/>
+        }
+    </div>
+
+     <div class="form-group">
+         <input type="submit" class="btn btn-secondary" value="OK"/>
+    </div>
+</form>

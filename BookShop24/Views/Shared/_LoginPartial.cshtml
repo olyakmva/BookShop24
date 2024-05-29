@@ -4,8 +4,10 @@
 @{
     if(SignInManager.IsSignedIn(User))
     {
-        <ul class="navbar-nav">
-            <li class="nav-item dropdown">
+        if (User.IsInRole("user"))
+        {
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     @UserManager.GetUserName(User)
                 </a>
@@ -26,8 +28,33 @@
                     </li>
                 </ul>
             </li>
-
-        </ul>
+            </ul>
+        }
+        else if (User.IsInRole("admin"))
+        {
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @UserManager.GetUserName(User)
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li>
+                            <a class="dropdown-item" asp-action="Index"
+                                    asp-controller="Admin">Пользователи</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-action="GetRoles"
+                            asp-controller="Admin">Роли</a>
+                        </li>
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" class="dropdown-item">
+                                <button type="submit" class="btn navbar-btn "> Выход</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        }
 
     }
     else
