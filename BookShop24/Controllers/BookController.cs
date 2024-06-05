@@ -1,12 +1,15 @@
 ﻿using BookShop24.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Data;
 
 namespace BookShop24.Controllers
 {
+    [Authorize(Roles = "manager")]
     public class BookController : Controller
     {
         BookContext _db;
@@ -73,9 +76,9 @@ namespace BookShop24.Controllers
             //    Price = 330,
             //    Category = zanr2
             //};
-            //_db.Categories.Add(zanr1);
-            //_db.Categories.Add(zanr2);
-            //_db.Books.AddRange(new[] { book1, book2, book4, book5, book6, book3 });
+            ////_db.Categories.Add(zanr1);
+            ////_db.Categories.Add(zanr2);
+            //_db.Books.AddRange(new[] { book1, book2,book4,book5,book6, book3 });
             //_db.SaveChanges();
 
         }

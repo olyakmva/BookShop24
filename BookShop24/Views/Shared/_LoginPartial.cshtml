@@ -55,7 +55,31 @@
                 </li>
             </ul>
         }
-
+        else if (User.IsInRole("manager"))
+        {
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @UserManager.GetUserName(User)
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li>
+                            <a class="dropdown-item" asp-action="Index"
+                   asp-controller="Book">Каталог</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-action="GetBestsellerList"
+                   asp-controller="Manager">Лучшие продажи</a>
+                        </li>
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" class="dropdown-item">
+                                <button type="submit" class="btn navbar-btn "> Выход</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        }
     }
     else
     {

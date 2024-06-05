@@ -1,0 +1,44 @@
+﻿@using BookShop24.ViewModels;
+@model PeriodViewModel
+
+<h2>Лучшие продажи за период</h2>
+<br/>
+<h4> Укажите период для вывода бестселлеров</h4>
+<form asp-action="GetBestsellerList" method="post">
+    <div class="form-group">
+        <label asp-for="Start" class="control-label"/>
+        <input asp-for="Start" type="date" class="form-control"/>
+        <span asp-validation-for="Start" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="End" class="control-label" />
+        <input asp-for="End" type="date" class="form-control" />
+        <span asp-validation-for="End" class="text-danger"></span>
+    </div>
+    <input type="submit" class="btn btn-secondary" value="OK"/>
+</form>
+@{
+    <h3> @ViewBag.Msg</h3>
+
+    if(Model.BestSellers!=null && Model.BestSellers.Count>0)
+    {
+        <div class="container">
+            <div class="row justify-content-around row-cols-4">
+        @foreach(var item in Model.BestSellers)
+            {
+                <div class="card" style="width: 13rem;">
+                    <img src="@Url.Content("~/images/")@item.Book.ImageUrl" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Book.Name</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">@item.Book.Author (@item.Book.Year)</h6>
+                          <p class="card-text">@item.Book.Price руб.</p>
+                        <h5 class="card-title">продано @item.Quantity шт.</h5>
+                    </div>
+                   
+                </div>
+                <br />
+            }
+        </div>
+        </div>
+    }
+}
